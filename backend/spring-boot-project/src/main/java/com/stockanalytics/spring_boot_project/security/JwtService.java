@@ -13,7 +13,7 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    @Value("${jwt.secret:${JWT_SECRET}}")
+    @Value("${jwt.secret:${JWT_SECRET:defaultDevSecretKeyForLocalTestingOnlyChangeInProduction256Bit}}")
     private String secretKey;
 
     private static final long EXPIRATION_TIME =

@@ -365,6 +365,19 @@ function Navbar() {
           <span className="user-name">{getUserName()}</span>
         </div>
 
+        {/* Mobile Search Button (visible only <= 800px) */}
+        <button
+          className="nav-icon-button mobile-search-btn"
+          title="Search Stocks"
+          onClick={() => {
+            setIsSearchOpen(true);
+            setTimeout(() => searchInputRef.current?.focus(), 60);
+          }}
+          aria-label="Search stocks"
+        >
+          <Search size={18} />
+        </button>
+
         <button
           className="nav-icon-button theme-toggle"
           onClick={toggleTheme}
@@ -557,6 +570,26 @@ function Navbar() {
           </div>
         </div>
       )}
+
+      {/* MOBILE BOTTOM NAVIGATION BAR (Fixed at bottom for mobile screens) */}
+      <div className="mobile-bottom-nav">
+        <Link to="/dashboard" className={`mobile-nav-item ${location.pathname === "/dashboard" ? "active" : ""}`}>
+          <LayoutDashboard size={20} />
+          <span>Dashboard</span>
+        </Link>
+        <Link to="/stocks" className={`mobile-nav-item ${location.pathname === "/stocks" || location.pathname.startsWith("/stock/") ? "active" : ""}`}>
+          <TrendingUp size={20} />
+          <span>Stocks</span>
+        </Link>
+        <Link to="/prediction" className={`mobile-nav-item ${location.pathname === "/prediction" ? "active" : ""}`}>
+          <Brain size={20} />
+          <span>Predict</span>
+        </Link>
+        <Link to="/portfolio" className={`mobile-nav-item ${location.pathname === "/portfolio" ? "active" : ""}`}>
+          <Briefcase size={20} />
+          <span>Portfolio</span>
+        </Link>
+      </div>
     </nav>
   );
 }

@@ -48,24 +48,16 @@ function Dashboard() {
         </div>
 
         {/* Featured Market Leaders Header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)", display: "flex", alignItems: "center", gap: 6 }}>
+        <div className="featured-section-header">
+          <span className="featured-section-title">
             <Sparkles size={16} color="#38bdf8" />
             Featured Market Equities
           </span>
           <button
             onClick={() => navigate("/stocks")}
-            className="btn-secondary"
-            style={{
-              fontSize: 12,
-              padding: "5px 12px",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              borderRadius: 20
-            }}
+            className="btn-secondary featured-explore-btn"
           >
-            Explore All {stocks.length || 90} Stocks in Directory
+            Explore All {stocks.length || 90} Stocks
             <ArrowRight size={14} />
           </button>
         </div>
@@ -92,43 +84,27 @@ function Dashboard() {
         </section>
 
         {/* Quick Symbol Switcher for Main Chart */}
-        <div id="analytics-chart-section" style={{ display: "flex", alignItems: "center", gap: 8, margin: "25px 0 15px 0", flexWrap: "wrap" }}>
-          <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-secondary)" }}>
-            Selected Asset:
-          </span>
-          {["AAPL", "MSFT", "GOOGL", "TSLA", "NVDA", "BTC", "TCS", "INFY", "RELIANCE", "HDFCBANK"].map((sym) => (
-            <button
-              key={sym}
-              onClick={() => setActiveSymbol(sym)}
-              className={activeSymbol === sym ? "btn-primary" : "btn-secondary"}
-              style={{
-                padding: "6px 14px",
-                fontSize: 12,
-                borderRadius: 8,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6
-              }}
-            >
-              <StockLogo symbol={sym} size={16} />
-              <span>{sym}</span>
-            </button>
-          ))}
+        <div id="analytics-chart-section" className="asset-switcher-container">
+          <div className="asset-switcher-label">
+            Selected:
+          </div>
+          <div className="asset-switcher-scroll">
+            {["AAPL", "MSFT", "GOOGL", "TSLA", "NVDA", "BTC", "TCS", "INFY", "RELIANCE", "HDFCBANK"].map((sym) => (
+              <button
+                key={sym}
+                onClick={() => setActiveSymbol(sym)}
+                className={`asset-pill-btn ${activeSymbol === sym ? "btn-primary active" : "btn-secondary"}`}
+              >
+                <StockLogo symbol={sym} size={16} />
+                <span>{sym}</span>
+              </button>
+            ))}
+          </div>
           <button
             onClick={() => navigate(`/stock/${activeSymbol}`)}
-            className="btn-secondary"
-            style={{
-              padding: "6px 14px",
-              fontSize: 12,
-              borderRadius: 8,
-              marginLeft: "auto",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              color: "var(--accent-color, #38bdf8)"
-            }}
+            className="btn-secondary asset-open-details-btn"
           >
-            Open Full {activeSymbol} Details Page
+            <span>{activeSymbol} Details</span>
             <ArrowRight size={14} />
           </button>
         </div>

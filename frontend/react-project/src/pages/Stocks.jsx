@@ -68,18 +68,9 @@ function Stocks() {
         </div>
 
         {/* Filter Controls & Search */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "16px",
-            flexWrap: "wrap",
-            margin: "20px 0 25px 0"
-          }}
-        >
+        <div className="stocks-filter-bar">
           {/* Category Tabs */}
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          <div className="stocks-filter-chips">
             {[
               { id: "all", label: `All Equities (${allSymbols.length})` },
               { id: "ustech", label: `US Tech (${usTech.length})` },
@@ -91,17 +82,7 @@ function Stocks() {
               <button
                 key={cat.id}
                 onClick={() => setFilterCategory(cat.id)}
-                style={{
-                  padding: "8px 16px",
-                  borderRadius: "20px",
-                  border: filterCategory === cat.id ? "1px solid var(--accent-color, #2563eb)" : "1px solid var(--border-color)",
-                  background: filterCategory === cat.id ? "var(--accent-color, #2563eb)" : "var(--card-bg)",
-                  color: filterCategory === cat.id ? "#ffffff" : "var(--text-primary)",
-                  fontSize: "13px",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease"
-                }}
+                className={`stock-filter-chip ${filterCategory === cat.id ? "active" : ""}`}
               >
                 {cat.label}
               </button>
@@ -109,37 +90,14 @@ function Stocks() {
           </div>
 
           {/* Search Input */}
-          <div
-            style={{
-              position: "relative",
-              width: "280px"
-            }}
-          >
-            <Search
-              size={16}
-              style={{
-                position: "absolute",
-                left: "12px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                color: "var(--text-secondary)"
-              }}
-            />
+          <div className="stocks-search-box">
+            <Search size={16} className="stocks-search-icon" />
             <input
               type="text"
               placeholder="Search 90 stocks..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "9px 12px 9px 36px",
-                borderRadius: "20px",
-                border: "1px solid var(--border-color)",
-                background: "var(--card-bg)",
-                color: "var(--text-primary)",
-                fontSize: "13px",
-                outline: "none"
-              }}
+              className="stocks-search-input"
             />
           </div>
         </div>

@@ -50,7 +50,7 @@ public class TwelveDataService {
         String cleanSymbol = symbol.trim().toUpperCase();
 
         // Check if fresh cached stock (updated within last 30 seconds) exists
-        Optional<Stock> cachedOpt = stockRepository.findBySymbol(cleanSymbol);
+        Optional<Stock> cachedOpt = stockRepository.findFirstBySymbolOrderByIdDesc(cleanSymbol);
         if (cachedOpt.isPresent()) {
             Stock cached = cachedOpt.get();
             if (cached.getTimestamp() != null && cached.getTimestamp().isAfter(LocalDateTime.now().minusSeconds(30))) {
@@ -137,7 +137,7 @@ public class TwelveDataService {
                     JsonNode meta = results.get(0).path("meta");
                     double price = meta.path("regularMarketPrice").asDouble(0.0);
                     if (price > 0) {
-                        Stock stock = stockRepository.findBySymbol(cleanSymbol)
+                        Stock stock = stockRepository.findFirstBySymbolOrderByIdDesc(cleanSymbol)
                                 .orElseGet(() -> {
                                     Stock s = new Stock();
                                     s.setSymbol(cleanSymbol);
@@ -426,15 +426,21 @@ public class TwelveDataService {
         }
 
         // Emergency offline baseline failsafe if internet connection is down
-        Stock s = new Stock();
-        s.setSymbol(symbol);
+        Stock s = stockRepository.findFirstBySymbolOrderByIdDesc(symbol)
+                .orElseGet(() -> {
+                    Stock newS = new Stock();
+                    newS.setSymbol(symbol);
+                    return newS;
+                });
         s.setCompanyName(resolveCompanyName(symbol));
         s.setTimestamp(LocalDateTime.now());
-        s.setPrice(150.0);
-        s.setOpenPrice(148.0);
-        s.setHighPrice(152.0);
-        s.setLowPrice(147.0);
-        s.setVolume(1000000L);
+        if (s.getPrice() == null || s.getPrice() <= 0) {
+            s.setPrice(150.0);
+            s.setOpenPrice(148.0);
+            s.setHighPrice(152.0);
+            s.setLowPrice(147.0);
+            s.setVolume(1000000L);
+        }
 
         return stockRepository.save(s);
     }

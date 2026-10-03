@@ -37,9 +37,10 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // Health check and auth don't need JWT
+                        // Health check, error dispatch, and auth don't need JWT
                         .requestMatchers(
                                 "/",
+                                "/error",
                                 "/api/auth/**"
                         ).permitAll()
 

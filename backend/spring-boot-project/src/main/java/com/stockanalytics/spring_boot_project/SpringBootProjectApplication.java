@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.CompletableFuture;
@@ -15,7 +16,10 @@ public class SpringBootProjectApplication {
 
 	@Bean
 	public RestTemplate restTemplate() {
-		return new RestTemplate();
+		SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+		factory.setConnectTimeout(5000);
+		factory.setReadTimeout(5000);
+		return new RestTemplate(factory);
 	}
 
 	@Bean
@@ -44,7 +48,7 @@ public class SpringBootProjectApplication {
 			CompletableFuture.runAsync(() -> {
 				for (String sym : symbols) {
 					try {
-						if (stockRepository.findBySymbol(sym).isEmpty()) {
+						if (stockRepository.findFirstBySymbolOrderByIdDesc(sym).isEmpty()) {
 							twelveDataService.getStockQuote(sym);
 							Thread.sleep(120); // Gentle pacing
 						}

@@ -26,9 +26,15 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+    if (error.response && error.response.status === 401) {
       const isAuthRequest = error.config?.url?.includes("/auth/");
-      if (!isAuthRequest) {
+      const isPublicEndpoint =
+        error.config?.url?.includes("/stocks") ||
+        error.config?.url?.includes("/analytics") ||
+        error.config?.url?.includes("/predictions") ||
+        error.config?.url?.includes("/sentiment");
+
+      if (!isAuthRequest && !isPublicEndpoint) {
         localStorage.removeItem("authToken");
         localStorage.removeItem("userName");
         if (window.location.pathname !== "/login") {

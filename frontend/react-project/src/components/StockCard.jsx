@@ -33,6 +33,7 @@ function StockCard(props) {
 
   const cleanSymbol = symbol ? symbol.toUpperCase() : "AAPL";
   const positive = change >= 0;
+  const category = props.category || stockObj.category || (positive ? "high" : "low");
   const isIndian = INDIAN_STOCKS.has(cleanSymbol);
   const currencySuffix = isIndian ? "INR" : "USD";
   const prefix = isIndian ? "₹" : "$";
@@ -43,7 +44,7 @@ function StockCard(props) {
       onClick={() => navigate(`/stock/${cleanSymbol}`)}
       title={`Click to view ${cleanSymbol} detailed chart & analysis`}
     >
-      {/* Top Row: Logo + Names */}
+      {/* Top Row: Logo + Names + Category Pill */}
       <div className="stock-card-top">
         <StockLogo symbol={cleanSymbol} size={36} />
         <div className="stock-card-meta">
@@ -53,6 +54,10 @@ function StockCard(props) {
           <p className="stock-card-symbol">
             {cleanSymbol}
           </p>
+        </div>
+        <div className={`stock-category-pill pill-${category}`} title={`Current category: ${category.toUpperCase()}`}>
+          {category === "high" ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
+          <span>{category.toUpperCase()}</span>
         </div>
       </div>
 

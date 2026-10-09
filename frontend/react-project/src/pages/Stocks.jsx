@@ -73,11 +73,11 @@ function Stocks() {
           <div className="stocks-filter-chips">
             {[
               { id: "all", label: `All Equities (${allSymbols.length})` },
+              { id: "gainers", label: "▲ High Category (Gainers)" },
+              { id: "losers", label: "▼ Low Category (Dippers)" },
               { id: "ustech", label: `US Tech (${usTech.length})` },
               { id: "usblue", label: `US Bluechips (${usBluechips.length})` },
-              { id: "india", label: `Indian Equities (${indianStocks.length})` },
-              { id: "gainers", label: "Top Gainers" },
-              { id: "losers", label: "Top Losers" }
+              { id: "india", label: `Indian Equities (${indianStocks.length})` }
             ].map((cat) => (
               <button
                 key={cat.id}
@@ -122,6 +122,7 @@ function Stocks() {
                 price={stock.price}
                 change={stock.change}
                 changePercent={stock.changePercent}
+                category={stock.change >= 0 ? "high" : "low"}
               />
             ))}
           </div>

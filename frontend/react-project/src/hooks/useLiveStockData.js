@@ -43,11 +43,17 @@ export const useLiveStockData = (symbols) => {
         if (cancelled) return;
 
         const validStocks = rawStocks
-          .map((stock) => {
+          .map((stock, idx) => {
             const price = Number(stock.price || 0);
-            const openPrice = Number(stock.openPrice || price * 0.995);
-            const change = price - openPrice;
-            const changePercent = openPrice > 0 ? (change / openPrice) * 100 : 0;
+            let openPrice = Number(stock.openPrice || 0);
+            if (!openPrice || openPrice <= 0) {
+              const hash = (stock.symbol || "").split("").reduce((acc, c) => acc + c.charCodeAt(0), idx);
+              const sign = hash % 2 === 0 ? 1 : -1;
+              const pctOffset = (0.002 + ((hash % 15) * 0.001)) * sign;
+              openPrice = Number((price * (1 - pctOffset)).toFixed(2));
+            }
+            const change = Number((price - openPrice).toFixed(2));
+            const changePercent = openPrice > 0 ? Number(((change / openPrice) * 100).toFixed(2)) : 0;
             return {
               symbol: stock.symbol,
               companyName: stock.companyName || stock.symbol,
@@ -95,8 +101,8 @@ export const useLiveStockData = (symbols) => {
           const s = updated[idx];
           if (!s) continue;
 
-          // Micro fluctuation: between -0.05% and +0.05%
-          const deltaPct = (Math.random() - 0.49) * 0.001;
+          // Micro fluctuation: between -0.15% and +0.15%
+          const deltaPct = (Math.random() - 0.49) * 0.003;
           const newPrice = Math.max(1, Number((s.price * (1 + deltaPct)).toFixed(2)));
           const newChange = Number((newPrice - s.openPrice).toFixed(2));
           const newChangePct = s.openPrice > 0 ? Number(((newChange / s.openPrice) * 100).toFixed(2)) : 0;
